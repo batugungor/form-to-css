@@ -1,0 +1,111 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+    <style>
+        .triple-card-structure .card {
+            border-radius: {{ component.getPropertyByName("Card border radius") }};
+        }
+    </style>
+
+    <div class="triple-card-structure">
+        <div class="container mt-5 py-5" data-property-identifier="162f40ec38a6db41d135ac86e830dac6">
+            <div class="row">
+                <div class="col-12 col-lg-4">
+                    <div class="card" data-property-identifier="e274ee8301fced8c7d08ae145393d0d4">
+                        <div class="card-body">
+                            awf
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-4">
+                    <div class="card" data-property-identifier="e274ee8301fced8c7d08ae145393d0d4">
+                        <div class="card-body">
+                            awf
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-4">
+                    <div class="card" data-property-identifier="e274ee8301fced8c7d08ae145393d0d4">
+                        <div class="card-body">
+                            awf
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <hr/>
+    </div>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-8">
+                {% for property in component.componentProperties %}
+                    <p class="mb-1">{{ property.metaKey }}</p>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control component-properties-setter" id="input{{ loop.index }}"
+                               value="{{ property.metaValue }}"
+                               data-input-main="{{ component.name }}"
+                               data-input-edits="{{ property.identifier }}"
+                               data-property-selector="{{ property.metaSelector }}"
+                               data-property-addition="{{ property.metaAddition }}"
+                        >
+                        <label class="input-group-text" for="input{{ loop.index }}">{{ property.metaUnit }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-4">
+                <button class="btn btn-primary" onclick="removeDataAttributes()">Test</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const propertySetters = document.getElementsByClassName("component-properties-setter");
+
+        for (let i = 0; i < propertySetters.length; i++) {
+            const current_property_setter = propertySetters[i];
+            current_property_setter.addEventListener('keyup', () => {
+                const datasets = document.querySelectorAll(`[data-property-identifier="${current_property_setter.dataset.inputEdits}"]`);
+
+                for (let j = 0; j < datasets.length; j++) {
+                    const current_dataset = datasets[j];
+                    current_dataset.style.setProperty(
+                        current_property_setter.dataset.propertySelector,
+                        current_property_setter.value + current_property_setter.dataset.propertyAddition
+                    );
+                }
+            });
+        }
+
+        function removeDataAttributes() {
+            const datasets = document.querySelectorAll(`[data-property-identifier]`);
+
+            for (let i = 0; i < datasets.length; i++) {
+                const current_dataset = datasets[i];
+                current_dataset.removeAttribute("data-property-identifier");
+            }
+        }
+
+        function toCamelCase(str) {
+            let newStr = "";
+            if (str) {
+                let wordArr = str.split(/[-_]/g);
+                for (let i in wordArr) {
+                    if (i > 0) {
+                        newStr += wordArr[i].charAt(0).toUpperCase() + wordArr[i].slice(1);
+                    } else {
+                        newStr += wordArr[i]
+                    }
+                }
+            } else {
+                return newStr
+            }
+            return newStr;
+        }
+    </script>
+{% endblock %}
